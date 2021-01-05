@@ -1,0 +1,21 @@
+{
+  "name": "article-nuxt",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "apollo-server": "^2.19.1",
+    "core-js": "^3.6.5",
+    "graphql": "^15.4.0",
+    "nuxt": "^2.14.6",
+    "vuetify": "^2.4.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.2"
+  }
+}
