@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/apollo": "^4.0.1-rc.5",
     "apollo-server": "^2.19.1",
     "core-js": "^3.6.5",
     "graphql": "^15.4.0",
