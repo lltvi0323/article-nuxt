@@ -2,7 +2,7 @@
   <div>
     <div class="article">
       <h1>Danh sách bài viết</h1>
-      <button><NuxtLink to="/ArticleForm">thêm bài viết</NuxtLink></button>
+      <button><NuxtLink to="/Article/ArticleForm">thêm bài viết</NuxtLink></button>
 
       <div
         class="article__contents"
@@ -60,10 +60,7 @@ export default {
         },
       });
 
-      this.$router.go({
-        path: "/article",
-        force: true,
-      });
+    window.location.reload(true);
     },
   },
   apollo: {
@@ -75,9 +72,13 @@ export default {
 </script>
 
 <style scoped>
-.article__contents span {
-  margin-left: 5px;
-}
-.articles {
-  margin-top: 50px;
-}
+  h1 {
+    text-align: center;
+  }
+  .article__contents span {
+    margin-left: 5px;
+  }
+  .articles {
+    margin-top: 50px;
+  }
+</style>
