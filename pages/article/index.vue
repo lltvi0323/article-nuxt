@@ -2,9 +2,8 @@
 <div>
   <div class="article">
     <h1>Danh sách bài viết</h1>
-    <ArticleForm
-      :getArticles = "getArticles" 
-    />
+    <ArticleForm :getArticles="getArticles" />
+
     <div class="article__contents" v-for="(article, index) in articles" :key="article.id">
       <span class="article_number">{{ index + 1 }}</span>
       <h3 class="article__title">
@@ -59,7 +58,8 @@ export default {
       edit: {
         content: "",
         title: "",
-      }
+      },
+      articles: []
     };
   },
   methods: {
@@ -79,7 +79,9 @@ export default {
 
     getEdit(article) {
       this.showEdit = true;
-      this.edit = {...article};
+      this.edit = {
+        ...article
+      };
     },
 
     async updateAction() {
@@ -102,26 +104,28 @@ export default {
         });
 
       this.showEdit = false;
-      if(!res) return console.log("sys fail");
+      if (!res) return console.log("sys fail");
 
-      const {isUpdated} = res.data;
-      if(isUpdated[0] !== 1) return console.log("update fail")
+      const {
+        isUpdated
+      } = res.data;
+      if (isUpdated[0] !== 1) return console.log("update fail")
       console.log("update success");
     },
-  
+
     async getArticles() {
-     const res = await this.$apollo.query({
+      const res = await this.$apollo.query({
         query: getArticles,
       });
-      console.log(res);
+
+      console.log({res: res.data.articles})
+
       this.articles = res.data.articles;
     }
   },
-  apollo: {
-    articles: {
-      query: getArticles,
-    },
-  },
+  mounted() {
+    this.getArticles();
+  }
 };
 </script>
 
