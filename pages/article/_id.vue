@@ -6,10 +6,10 @@
 
     <div class="article__contents" v-for="(article, index) in articles" :key="article.id">
       <span class="article_number">{{ index + 1 }}</span>
-      <span class="article__title">
-        <NuxtLink :to="article.id">{{
-            article.title
-          }}</NuxtLink>
+      <span class="article__title" >
+        <NuxtLink :to="article.id">
+          {{ article.title }}
+        </NuxtLink>
       </span>
       <span class="icon__article">
         <svg v-on:click="getEdit(article)" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1em" height="1em" viewBox="0 0 528.899 528.899" style="enable-background: new 0 0 528.899 528.899" xml:space="preserve">
@@ -28,6 +28,11 @@
     </div>
   </div>
 
+  <!-- detail article -->
+  <div class="article__detail">
+    <span>{{this.articleDetail.title}}</span>
+  </div>
+
   <!-- form Edit -->
   <v-dialog data-app v-model="showEdit" persistent :overlay="false" max-width="500px" transition="dialog-transition">
     <v-card>
@@ -42,7 +47,6 @@
       </v-card-text>
     </v-card>
   </v-dialog>
-  <nuxt-child></nuxt-child>
 </div>
 </template>
 
@@ -68,7 +72,8 @@ export default {
         url: "",
         title: ""
       },
-      articles: []
+      articles: [],
+      articleDetail: []
     };
   },
   methods: {
@@ -132,11 +137,23 @@ export default {
         query: getArticles
       });
       return res.data.articles;
+    },
+
+    async showArticleDetail(idArticle) {
+      const articles = await this.getArticles();
+
+      for ( let i = 0; i < articles.length; i++ ) {
+        if (idArticle === articles[i].id) {
+           this.articleDetail = articles[i];
+           return;
+         }
+       }
     }
   },
   async mounted() {
     const articles = await this.getArticles();
     const curArticleId = this.$route.params.id;
+    this.showArticleDetail(curArticleId);
 
     if (!curArticleId) {
       this.$router.push(`/article/${articles[0].id}`)
