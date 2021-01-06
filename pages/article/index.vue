@@ -2,8 +2,9 @@
   <div>
     <div class="article">
       <h1>Danh sách bài viết</h1>
-      <button><NuxtLink to="/Article/ArticleForm">thêm bài viết</NuxtLink></button>
-
+      <button>
+        <NuxtLink to="/Article/ArticleForm">thêm bài viết</NuxtLink>
+      </button>
       <div
         class="article__contents"
         v-for="(article, index) in articles"
@@ -15,9 +16,8 @@
             article.title
           }}</NuxtLink>
         </h3>
-        <span class="article__date">28-12-2020</span>
         <span>
-          <button>Sửa</button>
+          <button v-on:click="getEdit(article)">Sửa</button>
           <svg
             v-if="!isActiveLink(article.id)"
             width="1em"
@@ -39,15 +39,45 @@
         </span>
       </div>
     </div>
+
+    <!-- form Edit -->
+    <v-dialog
+      v-model="showEdit"
+      persistent
+      :overlay="false"
+      max-width="500px"
+      transition="dialog-transition"
+    >
+      <v-card>
+        <v-card-title primary-title>
+          <h2>Edit bài viết</h2>
+        </v-card-title>
+        <v-card-text>
+          <v-textarea v-model="edit.content" name="name" label="Content"></v-textarea>
+          <v-text-field v-model="edit.title" name="name" label="Title"></v-text-field>
+          <v-btn @click="updateAction" color="success">Save</v-btn>
+          <v-btn @click="showEdit = !showEdit" color="error">Cancel</v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import gql from "graphql-tag";
 import { getArticles } from "~/graphql/queries/article";
-import { removeArticle } from "@/graphql/queries/mutation";
+import { removeArticle, updateArticle } from "@/graphql/queries/mutation";
 
 export default {
+  data() {
+    return {
+      showEdit: false,
+      edit: {
+        content: "",
+        title: "",
+      }
+    };
+  },
   methods: {
     isActiveLink: function (articleId) {
       return articleId === this.$route.params.id;
@@ -60,8 +90,31 @@ export default {
         },
       });
 
-    window.location.reload(true);
+      window.location.reload(true);
     },
+
+    getEdit(article) {
+      this.showEdit = true;
+      this.edit = article;
+    },
+
+    updateAction() {
+      this.$apollo
+        .mutate({
+          mutation: updateArticle,
+          variables: {
+            content: this.edit.content,
+            title: this.edit.title,
+            id: this.edit.id
+          }
+        })
+        .then(rs => {
+          this.showEdit = false;
+        })
+        .catch(er => {
+          console.log(er);
+        });
+    }
   },
   apollo: {
     articles: {
@@ -72,13 +125,16 @@ export default {
 </script>
 
 <style scoped>
-  h1 {
-    text-align: center;
-  }
-  .article__contents span {
-    margin-left: 5px;
-  }
-  .articles {
-    margin-top: 50px;
-  }
+.v-dialog__container {
+  display: block;
+};
+h1 {
+  text-align: center;
+}
+.article__contents span {
+  margin-left: 5px;
+}
+.articles {
+  margin-top: 50px;
+}
 </style>

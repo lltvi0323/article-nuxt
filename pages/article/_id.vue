@@ -1,20 +1,31 @@
 <template>
-<div>
-  <div>Detail article page</div>
-  <ArticleForm />
-</div>
+  <div class="card article__content">
+    <div class="card-body flex-column">
+      <h3 class="font-weight-bold">{{ curArticle.title }}</h3>
+      <div>{{ curArticle.content }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
-import ArticleForm from '~/components/ArticleForm';
+import { getArticle } from "@/graphql/queries/article";
 
 export default {
-  components: {
-    ArticleForm
+  name: "Article",
+  apollo: {
+    curArticle: {
+      query: getArticle,
+      variables() {
+        return { id: this.$route.params.id };
+      }
+    }
   }
-}
+};
 </script>
 
 <style>
-
+.article__content {
+  max-height: 300px;
+  overflow-y: auto;
+}
 </style>

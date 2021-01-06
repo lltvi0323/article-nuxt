@@ -1,6 +1,6 @@
 <template>
   <div class="articleform container">
-    <form>
+    <form @submit="onSubmitCreateArticle">
       <h4 class="mt-3">Thêm bài viết</h4>
       <div class="form-group">
         <label for="exampleFormControlInput1">Title</label>
@@ -8,6 +8,7 @@
           type="text"
           class="form-control"
           id="exampleFormControlInput1"
+          v-model="title"
           placeholder="title..."
           required
         />
@@ -19,11 +20,13 @@
           id="exampleFormControlTextarea1"
           rows="5"
           placeholder="content..."
+          v-model="content"
           required
         ></textarea>
       </div>
       <div class="row ml-0 mr-0">
         <button type="submit" class="btn btn-success">Submit</button>
+        <button v-on:click="goBack()" class="btn btn-success">Back</button>
       </div>
     </form>
   </div>
@@ -34,6 +37,7 @@
 
 <script>
 import { createArticle } from "@/graphql/queries/mutation";
+import { getArticles } from "~/graphql/queries/article";
 
 export default {
   data() {
@@ -53,13 +57,13 @@ export default {
           content: this.content
         }
       });
+    this.$router.push("/article");
+    },
 
-      
-      this.$router.go({
-        path: "/article",
-        force: true,
-      });
+    goBack() {
+      this.$router.push("/article");
     }
-  }
+  },
+
 };
 </script>
