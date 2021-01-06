@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { getArticle } from "@/graphql/queries/article";
+import { getArticle } from "~/graphql/article";
 
 export default {
   name: "Article",

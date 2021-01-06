@@ -2,9 +2,9 @@
 <div>
   <div class="article">
     <h1>Danh sách bài viết</h1>
-    <button>
-      <NuxtLink to="/Article/ArticleForm">thêm bài viết</NuxtLink>
-    </button>
+    <ArticleForm
+      :getArticles = "getArticles" 
+    />
     <div class="article__contents" v-for="(article, index) in articles" :key="article.id">
       <span class="article_number">{{ index + 1 }}</span>
       <h3 class="article__title">
@@ -40,16 +40,19 @@
 </template>
 
 <script>
-import gql from "graphql-tag";
 import {
-  getArticles
-} from "~/graphql/queries/article";
-import {
+  getArticles,
   removeArticle,
   updateArticle
-} from "@/graphql/queries/mutation";
+} from "~/graphql/article";
+
+import ArticleForm from "~/components/ArticleForm";
 
 export default {
+  components: {
+    ArticleForm
+  },
+
   data() {
     return {
       showEdit: false,
@@ -104,6 +107,14 @@ export default {
       const {isUpdated} = res.data;
       if(isUpdated[0] !== 1) return console.log("update fail")
       console.log("update success");
+    },
+  
+    async getArticles() {
+     const res = await this.$apollo.query({
+        query: getArticles,
+      });
+      console.log(res);
+      this.articles = res.data.articles;
     }
   },
   apollo: {

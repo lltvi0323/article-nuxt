@@ -1,54 +1,78 @@
 <template>
-  <v-row justify="center">
+  <!-- form add -->
+  <div>
+    <button v-on:click="handleShowAdd">Thêm bài viết</button>
+
     <v-dialog
-      data-app
-      v-model="dialog"
+      v-model="showAdd"
       persistent
-      max-width="290"
+      :overlay="false"
+      max-width="500px"
+      transition="dialog-transition"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="primary"
-          dark
-          v-bind="attrs"
-          v-on="on"
-        >
-         Thêm bài viết
-        </v-btn>
-      </template>
       <v-card>
-        <v-card-title class="headline">
-          Use Google's location service?
+        <v-card-title primary-title>
+          <h2>Thêm bài viết</h2>
         </v-card-title>
-        <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
-          >
-            Disagree
-          </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="dialog = false"
-          >
-            Agree
-          </v-btn>
-        </v-card-actions>
+        <v-card-text>
+          <v-text-field
+            v-model="addItem.title"
+            label="Title"
+          ></v-text-field>
+          <v-text-field
+            v-model="addItem.url"
+            label="Url"
+          ></v-text-field>
+          <button @click="handleAddAction" color="success">Save</button>
+          <button @click="showAdd = !showAdd" color="error">Cancel</button>
+        </v-card-text>
       </v-card>
     </v-dialog>
-  </v-row>
+  </div>
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        dialog: false,
-      }
+import { createArticle } from "~/graphql/article";
+
+export default {
+  props: {
+    getArticles: Function
+  },
+
+  data() {
+    return {
+      showAdd: false,
+      addItem: {
+        url: "",
+        title: "",
+      },
+    };
+  },
+
+  methods: {
+    handleShowAdd() {
+      this.showAdd = true;
     },
-  }
+
+    async handleAddAction() {
+      await this.$apollo.mutate({
+        mutation: createArticle,
+        variables: {
+          input: { 
+            ...this.addItem,
+            category_id: 8
+          },
+        },
+      });
+      this.getArticles();
+      this.showAdd = false;
+    },
+  },
+};
 </script>
+
+<style scoped>
+.v-dialog__container {
+  display: block;
+}
+</style>
