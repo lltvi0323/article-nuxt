@@ -17,7 +17,7 @@ export const getArticle = gql`
     curArticle: get_article(id: $id) {
       id
       title
-      content
+      url
     }
   }
 `;
@@ -26,7 +26,7 @@ export const createArticle = gql`
   mutation($input: ArticleInput_Create!) {
     create_article(input: $input){
       id
-      content
+      url
       title
     }
   }

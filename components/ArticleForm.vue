@@ -1,10 +1,11 @@
 <template>
   <!-- form add -->
   <div>
-    <button v-on:click="handleShowAdd">Thêm bài viết</button>
+    <button v-on:click="handleShowAdd" class="button">Thêm bài viết</button>
 
     <v-dialog
       v-model="showAdd"
+      data-app
       persistent
       :overlay="false"
       max-width="500px"
@@ -52,6 +53,10 @@ export default {
   methods: {
     handleShowAdd() {
       this.showAdd = true;
+      this.addItem = {
+        url: "",
+        title: ""
+      };
     },
 
     async handleAddAction() {
@@ -74,5 +79,18 @@ export default {
 <style scoped>
 .v-dialog__container {
   display: block;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  padding: 5px;
 }
 </style>
