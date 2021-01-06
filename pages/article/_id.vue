@@ -4,10 +4,10 @@
     <h1>Danh sách bài viết</h1>
     <ArticleForm :getArticles="handleFetchArticles" />
 
-    <div class="article__contents" v-for="(article, index) in articles" :key="article.id">
+    <div class="article__contents" v-for="(article, index) in articles" :key="index">
       <span class="article_number">{{ index + 1 }}</span>
-      <span class="article__title" >
-        <NuxtLink :to="article.id">
+      <span class="article__title">
+        <NuxtLink :to="`/article/${article.id}`">
           {{ article.title }}
         </NuxtLink>
       </span>
@@ -30,7 +30,7 @@
 
   <!-- detail article -->
   <div class="article__detail">
-    <span>{{this.articleDetail.title}}</span>
+    <span>{{articleDetail.title}}</span>
   </div>
 
   <!-- form Edit -->
@@ -73,7 +73,7 @@ export default {
         title: ""
       },
       articles: [],
-      articleDetail: []
+      articleDetail: {}
     };
   },
   methods: {
@@ -139,27 +139,20 @@ export default {
       return res.data.articles;
     },
 
-    async showArticleDetail(idArticle) {
-      const articles = await this.getArticles();
-
-      for ( let i = 0; i < articles.length; i++ ) {
-        if (idArticle === articles[i].id) {
-           this.articleDetail = articles[i];
-           return;
-         }
-       }
+    showArticleDetail(idArticle) {
+      this.articleDetail = this.articles.find(article => article.id === idArticle);
     }
   },
   async mounted() {
     const articles = await this.getArticles();
     const curArticleId = this.$route.params.id;
-    this.showArticleDetail(curArticleId);
 
     if (!curArticleId) {
       this.$router.push(`/article/${articles[0].id}`)
     }
 
     this.articles = articles;
+    this.showArticleDetail(curArticleId);
   }
 };
 </script>
