@@ -21,11 +21,8 @@ export const removeArticle = gql`
   }
 `;
 
-
 export const updateArticle = gql`
-  mutation($id: ID!, $title: String!, $content: String) {
-    articleRemoved: update_article( where: { id: {id: $id}, title: {title: $title}, content: {content: $content}}) {
-      affected_rows
-    }
+  mutation($id: ID!, $input: ArticleInput_Update!) {
+    isUpdated: update_article(id: $id, input: $input)
   }
 `;
